@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业公告 - 管理</title>
+    <style>
+        /* 通用样式 */
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* 字体设置 */
+            margin: 0; /* 移除默认外边距 */
+            background-color: #f4f7f6; /* 背景色 */
+            color: #333; /* 文本颜色 */
+            line-height: 1.6; /* 行高 */
+        }
+        .container {
+            max-width: 960px; /* 最大宽度 */
+            margin: 20px auto; /* 居中并设置上下外边距 */
+            padding: 25px; /* 内边距 */
+            background-color: #ffffff; /* 容器背景色 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* 阴影效果 */
+            border-radius: 10px; /* 圆角 */
+        }
+        h1 {
+            color: #2c3e50; /* 标题颜色 */
+            text-align: center; /* 标题居中 */
+            margin-bottom: 30px; /* 底部外边距 */
+            padding-bottom: 10px; /* 底部内边距 */
+            border-bottom: 2px solid #e0e0e0; /* 底部边框 */
+        }
+        form {
+            background-color: #fcfcfc; /* 表单背景色 */
+            padding: 25px; /* 内边距 */
+            border-radius: 8px; /* 圆角 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04); /* 阴影 */
+            margin-bottom: 40px; /* 底部外边距 */
+        }
+        .form-group {
+            margin-bottom: 20px; /* 表单组底部外边距 */
+        }
+        label {
+            display: block; /* 块级显示 */
+            margin-bottom: 8px; /* 底部外边距 */
+            font-weight: bold; /* 字体加粗 */
+            color: #555; /* 标签颜色 */
+        }
+        input[type="text"],
+        input[type="url"],
+        input[type="date"],
+        textarea {
+            width: calc(100% - 22px); /* 宽度减去边框和内边距 */
+            padding: 10px; /* 内边距 */
+            border: 1px solid #ccc; /* 边框 */
+            border-radius: 5px; /* 圆角 */
+            font-size: 1em; /* 字体大小 */
+            box-sizing: border-box; /* 盒子模型 */
+            transition: border-color 0.2s ease; /* 边框颜色过渡 */
+        }
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            border-color: #3498db; /* 聚焦时边框颜色 */
+            outline: none; /* 移除默认轮廓 */
+        }
+        textarea {
+            resize: vertical; /* 只允许垂直调整大小 */
+            min-height: 150px; /* 最小高度 */
+        }
+        button {
+            background-color: #3498db; /* 按钮背景色 */
+            color: white; /* 按钮文本颜色 */
+            padding: 12px 25px; /* 内边距 */
+            border: none; /* 无边框 */
+            border-radius: 5px; /* 圆角 */
+            cursor: pointer; /* 鼠标指针 */
+            font-size: 1.1em; /* 字体大小 */
+            transition: background-color 0.2s ease; /* 背景颜色过渡 */
+            margin-right: 10px; /* 右侧外边距 */
+        }
+        button:hover {
+            background-color: #2980b9; /* 悬停背景色 */
+        }
+        button:last-child {
+            margin-right: 0; /* 最后一个按钮移除右侧外边距 */
+        }
+        button.delete-btn {
+            background-color: #e74c3c; /* 删除按钮背景色 */
+        }
+        button.delete-btn:hover {
+            background-color: #c0392b; /* 删除按钮悬停背景色 */
+        }
+        button.cancel-btn {
+            background-color: #95a5a6; /* 取消按钮背景色 */
+        }
+        button.cancel-btn:hover {
+            background-color: #7f8c8d; /* 取消按钮悬停背景色 */
+        }
+
+        .announcements-table {
+            width: 100%; /* 表格宽度 */
+            border-collapse: collapse; /* 边框合并 */
+            margin-top: 30px; /* 顶部外边距 */
+        }
+        .announcements-table th,
+        .announcements-table td {
+            border: 1px solid #ddd; /* 边框 */
+            padding: 12px; /* 内边距 */
+            text-align: left; /* 左对齐 */
+        }
+        .announcements-table th {
+            background-color: #f2f2f2; /* 表头背景色 */
+            font-weight: bold; /* 字体加粗 */
+            color: #555; /* 表头文本颜色 */
+        }
+        .announcements-table tr:nth-child(even) {
+            background-color: #f9f9f9; /* 偶数行背景色 */
+        }
+        .announcements-table tr:hover {
+            background-color: #f1f1f1; /* 鼠标悬停行背景色 */
+        }
+        .actions button {
+            padding: 8px 15px; /* 动作按钮内边距 */
+            font-size: 0.9em; /* 字体大小 */
+            margin-right: 5px; /* 右侧外边距 */
+        }
+        .actions button.edit-btn {
+            background-color: #2ecc71; /* 编辑按钮背景色 */
+        }
+        .actions button.edit-btn:hover {
+            background-color: #27ae60; /* 编辑按钮悬停背景色 */
+        }
+        .actions button.delete-btn {
+            background-color: #e74c3c; /* 删除按钮背景色 */
+        }
+        .actions button.delete-btn:hover {
+            background-color: #c0392b; /* 删除按钮悬停背景色 */
+        }
+
+        /* 附件输入样式 */
+        .attachment-item {
+            display: flex; /* 弹性布局 */
+            align-items: center; /* 垂直居中 */
+            margin-bottom: 10px; /* 底部外边距 */
+        }
+        .attachment-item input {
+            flex-grow: 1; /* 占据剩余空间 */
+            margin-right: 10px; /* 右侧外边距 */
+        }
+        .attachment-item button {
+            background-color: #e74c3c; /* 按钮背景色 */
+            padding: 8px 12px; /* 内边距 */
+            font-size: 0.9em; /* 字体大小 */
+            margin: 0; /* 移除外边距 */
+        }
+        .add-attachment-btn {
+            background-color: #9b59b6; /* 添加附件按钮背景色 */
+            margin-top: 10px; /* 顶部外边距 */
+        }
+        .add-attachment-btn:hover {
+            background-color: #8e44ad; /* 添加附件按钮悬停背景色 */
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px; /* 调整移动端外边距 */
+                padding: 15px; /* 调整移动端内边距 */
+            }
+            .announcements-table, .announcements-table thead, .announcements-table tbody, .announcements-table th, .announcements-table td, .announcements-table tr {
+                display: block; /* 在小屏幕上，表格元素显示为块级 */
+            }
+            .announcements-table thead tr {
+                position: absolute; /* 表头行绝对定位 */
+                top: -9999px; /* 移出屏幕外 */
+                left: -9999px; /* 移出屏幕外 */
+            }
+            .announcements-table tr {
+                margin-bottom: 15px; /* 行底部外边距 */
+                border: 1px solid #ddd; /* 行边框 */
+                border-radius: 8px; /* 行圆角 */
+            }
+            .announcements-table td {
+                border: none; /* 单元格无边框 */
+                border-bottom: 1px solid #eee; /* 单元格底部边框 */
+                position: relative; /* 相对定位 */
+                padding-left: 50%; /* 左内边距，为伪元素留出空间 */
+                text-align: right; /* 文本右对齐 */
+            }
+            .announcements-table td:last-child {
+                border-bottom: none; /* 最后一个单元格无底部边框 */
+            }
+            .announcements-table td::before {
+                content: attr(data-label); /* 使用data-label属性作为内容 */
+                position: absolute; /* 绝对定位 */
+                left: 10px; /* 左侧距离 */
+                width: calc(50% - 20px); /* 宽度计算 */
+                padding-right: 10px; /* 右内边距 */
+                white-space: nowrap; /* 不换行 */
+                font-weight: bold; /* 字体加粗 */
+                text-align: left; /* 文本左对齐 */
+                color: #555; /* 颜色 */
+            }
+            .actions {
+                text-align: center; /* 动作按钮居中 */
+                margin-top: 10px; /* 顶部外边距 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>公告管理</h1>
+
+        <form id="announcementForm">
+            <input type="hidden" id="announcementId"> <div class="form-group">
+                <label for="title">标题:</label>
+                <input type="text" id="title" required> </div>
+            <div class="form-group">
+                <label for="author">发布人:</label>
+                <input type="text" id="author" value="管理员"> </div>
+            <div class="form-group">
+                <label for="content">内容:</label>
+                <textarea id="content" rows="8" required></textarea> </div>
+            <div class="form-group">
+                <label for="expiryDate">过期日期 (可选):</label>
+                <input type="date" id="expiryDate"> </div>
+            <div class="form-group">
+                <label>附件:</label>
+                <div id="attachmentsContainer">
+                    </div>
+                <button type="button" class="add-attachment-btn" id="addAttachmentBtn">添加附件</button> </div>
+            <button type="submit" id="saveBtn">发布公告</button> <button type="button" class="cancel-btn" id="cancelEditBtn" style="display: none;">取消编辑</button> </form>
+
+        <h2>已发布公告</h2>
+        <table class="announcements-table">
+            <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>发布人</th>
+                    <th>发布日期</th>
+                    <th>过期日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="announcementsTableBody">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const announcementForm = document.getElementById('announcementForm'); // 获取公告表单
+            const announcementId = document.getElementById('announcementId'); // 获取隐藏的公告ID输入框
+            const titleInput = document.getElementById('title'); // 获取标题输入框
+            const authorInput = document.getElementById('author'); // 获取发布人输入框
+            const contentInput = document.getElementById('content'); // 获取内容文本域
+            const expiryDateInput = document.getElementById('expiryDate'); // 获取过期日期输入框
+            const attachmentsContainer = document.getElementById('attachmentsContainer'); // 获取附件容器
+            const addAttachmentBtn = document.getElementById('addAttachmentBtn'); // 获取添加附件按钮
+            const saveBtn = document.getElementById('saveBtn'); // 获取保存按钮
+            const cancelEditBtn = document.getElementById('cancelEditBtn'); // 获取取消编辑按钮
+            const announcementsTableBody = document.getElementById('announcementsTableBody'); // 获取公告表格体
+
+            // 从LocalStorage加载公告数据
+            const loadAnnouncements = () => {
+                const announcementsJson = localStorage.getItem('announcements'); // 从LocalStorage获取JSON字符串
+                return announcementsJson ? JSON.parse(announcementsJson) : []; // 解析JSON或返回空数组
+            };
+
+            // 保存公告数据到LocalStorage
+            const saveAnnouncements = (announcements) => {
+                localStorage.setItem('announcements', JSON.stringify(announcements)); // 将公告数组转换为JSON字符串并保存
+            };
+
+            // 生成唯一ID
+            const generateUniqueId = () => {
+                return '_' + Math.random().toString(36).substr(2, 9); // 生成一个简单的唯一ID
+            };
+
+            // 渲染公告表格
+            const renderAnnouncementsTable = () => {
+                const announcements = loadAnnouncements(); // 加载公告数据
+                announcementsTableBody.innerHTML = ''; // 清空表格内容
+
+                if (announcements.length === 0) { // 如果没有公告
+                    announcementsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #777;">暂无公告。</td></tr>'; // 显示暂无公告提示
+                    return;
+                }
+
+                // 按发布日期倒序排序
+                const sortedAnnouncements = announcements.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+
+                sortedAnnouncements.forEach(announcement => { // 遍历每个公告
+                    const row = announcementsTableBody.insertRow(); // 插入新行
+                    row.dataset.id = announcement.id; // 将公告ID存储在行的dataset中
+
+                    // 标题单元格
+                    const titleCell = row.insertCell();
+                    titleCell.textContent = announcement.title;
+                    titleCell.setAttribute('data-label', '标题:'); // 移动端显示标签
+
+                    // 发布人单元格
+                    const authorCell = row.insertCell();
+                    authorCell.textContent = announcement.author || '未知';
+                    authorCell.setAttribute('data-label', '发布人:');
+
+                    // 发布日期单元格
+                    const publishDateCell = row.insertCell();
+                    publishDateCell.textContent = new Date(announcement.publishDate).toLocaleDateString();
+                    publishDateCell.setAttribute('data-label', '发布日期:');
+
+                    // 过期日期单元格
+                    const expiryDateCell = row.insertCell();
+                    expiryDateCell.textContent = announcement.expiryDate ? new Date(announcement.expiryDate).toLocaleDateString() : '无';
+                    expiryDateCell.setAttribute('data-label', '过期日期:');
+
+                    // 操作单元格
+                    const actionsCell = row.insertCell();
+                    actionsCell.classList.add('actions');
+                    actionsCell.setAttribute('data-label', '操作:');
+
+                    // 编辑按钮
+                    const editButton = document.createElement('button');
+                    editButton.textContent = '编辑';
+                    editButton.classList.add('edit-btn');
+                    editButton.addEventListener('click', () => editAnnouncement(announcement.id)); // 绑定编辑事件
+                    actionsCell.appendChild(editButton);
+
+                    // 删除按钮
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = '删除';
+                    deleteButton.classList.add('delete-btn');
+                    deleteButton.addEventListener('click', () => deleteAnnouncement(announcement.id)); // 绑定删除事件
+                    actionsCell.appendChild(deleteButton);
+                });
+            };
+
+            // 添加附件输入框
+            const addAttachmentInput = (fileName = '', filePath = '') => {
+                const attachmentDiv = document.createElement('div'); // 创建附件div
+                attachmentDiv.classList.add('attachment-item'); // 添加CSS类
+                attachmentDiv.innerHTML = `
+                    <input type="text" placeholder="附件名称" value="${fileName}"> <input type="url" placeholder="附件链接 (如: https://example.com/file.pdf)" value="${filePath}"> <button type="button" class="delete-attachment-btn">删除</button> `;
+                attachmentsContainer.appendChild(attachmentDiv); // 将附件div添加到容器
+
+                // 为删除附件按钮添加事件监听器
+                attachmentDiv.querySelector('.delete-attachment-btn').addEventListener('click', () => {
+                    attachmentsContainer.removeChild(attachmentDiv); // 从容器中移除附件div
+                });
+            };
+
+            // 重置表单
+            const resetForm = () => {
+                announcementId.value = ''; // 清空公告ID
+                titleInput.value = ''; // 清空标题
+                authorInput.value = '管理员'; // 恢复默认发布人
+                contentInput.value = ''; // 清空内容
+                expiryDateInput.value = ''; // 清空过期日期
+                attachmentsContainer.innerHTML = ''; // 清空附件
+                saveBtn.textContent = '发布公告'; // 按钮文本改为“发布公告”
+                cancelEditBtn.style.display = 'none'; // 隐藏取消编辑按钮
+            };
+
+            // 编辑公告
+            const editAnnouncement = (id) => {
+                const announcements = loadAnnouncements(); // 加载公告
+                const announcementToEdit = announcements.find(ann => ann.id === id); // 查找要编辑的公告
+
+                if (announcementToEdit) { // 如果找到公告
+                    announcementId.value = announcementToEdit.id; // 设置隐藏的公告ID
+                    titleInput.value = announcementToEdit.title; // 设置标题
+                    authorInput.value = announcementToEdit.author || '管理员'; // 设置发布人
+                    contentInput.value = announcementToEdit.content; // 设置内容
+                    expiryDateInput.value = announcementToEdit.expiryDate ? announcementToEdit.expiryDate.split('T')[0] : ''; // 设置过期日期（只取日期部分）
+
+                    attachmentsContainer.innerHTML = ''; // 清空现有附件
+                    if (announcementToEdit.attachments && announcementToEdit.attachments.length > 0) { // 如果有附件
+                        announcementToEdit.attachments.forEach(att => addAttachmentInput(att.fileName, att.filePath)); // 添加附件输入框
+                    }
+
+                    saveBtn.textContent = '保存修改'; // 按钮文本改为“保存修改”
+                    cancelEditBtn.style.display = 'inline-block'; // 显示取消编辑按钮
+                }
+            };
+
+            // 删除公告
+            const deleteAnnouncement = (id) => {
+                if (confirm('确定要删除这条公告吗？')) { // 弹出确认框
+                    let announcements = loadAnnouncements(); // 加载公告
+                    announcements = announcements.filter(ann => ann.id !== id); // 过滤掉要删除的公告
+                    saveAnnouncements(announcements); // 保存更新后的公告列表
+                    renderAnnouncementsTable(); // 重新渲染表格
+                    resetForm(); // 重置表单
+                }
+            };
+
+            // 表单提交事件 (发布/保存公告)
+            announcementForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // 阻止表单默认提交行为
+
+                const id = announcementId.value; // 获取公告ID
+                const title = titleInput.value.trim(); // 获取标题并去除首尾空格
+                const author = authorInput.value.trim(); // 获取发布人并去除首尾空格
+                const content = contentInput.value.trim(); // 获取内容并去除首尾空格
+                const expiryDate = expiryDateInput.value; // 获取过期日期
+                
+                // 获取附件数据
+                const attachments = [];
+                attachmentsContainer.querySelectorAll('.attachment-item').forEach(item => { // 遍历所有附件项
+                    const fileName = item.querySelector('input[type="text"]').value.trim(); // 获取附件名称
+                    const filePath = item.querySelector('input[type="url"]').value.trim(); // 获取附件链接
+                    if (fileName && filePath) { // 如果名称和链接都存在
+                        attachments.push({ fileName, filePath }); // 添加到附件数组
+                    }
+                });
+
+                if (!title || !content) { // 检查标题和内容是否为空
+                    alert('标题和内容不能为空！'); // 提示用户
+                    return;
+                }
+
+                let announcements = loadAnnouncements(); // 加载现有公告
+
+                if (id) { // 如果是编辑现有公告
+                    const index = announcements.findIndex(ann => ann.id === id); // 查找公告索引
+                    if (index !== -1) { // 如果找到
+                        announcements[index] = { // 更新公告数据
+                            ...announcements[index], // 保留原有字段
+                            title,
+                            author,
+                            content,
+                            expiryDate: expiryDate ? new Date(expiryDate).toISOString() : null, // 转换为ISO字符串或null
+                            attachments,
+                            publishDate: announcements[index].publishDate, // 保持发布日期不变
+                            updatedAt: new Date().toISOString() // 更新修改时间
+                        };
+                    }
+                } else { // 如果是发布新公告
+                    const newAnnouncement = { // 创建新公告对象
+                        id: generateUniqueId(), // 生成唯一ID
+                        title,
+                        author,
+                        content,
+                        publishDate: new Date().toISOString(), // 设置发布日期为当前时间
+                        expiryDate: expiryDate ? new Date(expiryDate).toISOString() : null, // 设置过期日期或null
+                        attachments,
+                        createdAt: new Date().toISOString(), // 设置创建时间
+                        updatedAt: new Date().toISOString() // 设置更新时间
+                    };
+                    announcements.push(newAnnouncement); // 将新公告添加到数组
+                }
+
+                saveAnnouncements(announcements); // 保存公告
+                renderAnnouncementsTable(); // 重新渲染表格
+                resetForm(); // 重置表单
+                alert(id ? '公告修改成功！' : '公告发布成功！'); // 提示成功信息
+            });
+
+            // 添加附件按钮点击事件
+            addAttachmentBtn.addEventListener('click', () => addAttachmentInput()); // 点击时添加附件输入框
+
+            // 取消编辑按钮点击事件
+            cancelEditBtn.addEventListener('click', () => resetForm()); // 点击时重置表单
+
+            renderAnnouncementsTable(); // 页面加载完成后立即渲染公告表格
+        });
+    </script>
+</body>
+</html>
